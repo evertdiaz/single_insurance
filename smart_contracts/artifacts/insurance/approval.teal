@@ -1,0 +1,361 @@
+#pragma version 8
+intcblock 0 1
+bytecblock 0x 0x151f7c75 0x617373657444657363 0x61737365744e616d65 0x617373657456616c 0x726571756573745374617465 0x726571756573746572 0x6173614944
+txna ApplicationArgs 0
+pushbytes 0x9b940f39 // "createApp(account)string"
+==
+bnz main_l10
+txna ApplicationArgs 0
+pushbytes 0xfd08cef6 // "registerAsset(string,string,uint64)string"
+==
+bnz main_l9
+txna ApplicationArgs 0
+pushbytes 0x2d31124d // "approveAsset(pay)string"
+==
+bnz main_l8
+txna ApplicationArgs 0
+pushbytes 0x6f41572b // "sendInsurance(asset)string"
+==
+bnz main_l7
+txna ApplicationArgs 0
+pushbytes 0x02bece11 // "hello(string)string"
+==
+bnz main_l6
+err
+main_l6:
+txn OnCompletion
+intc_0 // NoOp
+==
+txn ApplicationID
+intc_0 // 0
+!=
+&&
+assert
+callsub hellocaster_9
+intc_1 // 1
+return
+main_l7:
+txn OnCompletion
+intc_0 // NoOp
+==
+txn ApplicationID
+intc_0 // 0
+!=
+&&
+assert
+callsub sendInsurancecaster_8
+intc_1 // 1
+return
+main_l8:
+txn OnCompletion
+intc_0 // NoOp
+==
+txn ApplicationID
+intc_0 // 0
+!=
+&&
+assert
+callsub approveAssetcaster_7
+intc_1 // 1
+return
+main_l9:
+txn OnCompletion
+intc_0 // NoOp
+==
+txn ApplicationID
+intc_0 // 0
+!=
+&&
+assert
+callsub registerAssetcaster_6
+intc_1 // 1
+return
+main_l10:
+txn OnCompletion
+intc_0 // NoOp
+==
+txn ApplicationID
+intc_0 // 0
+==
+&&
+assert
+callsub createAppcaster_5
+intc_1 // 1
+return
+
+// createApp
+createApp_0:
+proto 1 1
+bytec_0 // ""
+bytec 7 // "asaID"
+intc_0 // 0
+app_global_put
+bytec_2 // "assetDesc"
+bytec_0 // ""
+app_global_put
+bytec_3 // "assetName"
+bytec_0 // ""
+app_global_put
+bytec 4 // "assetVal"
+intc_0 // 0
+app_global_put
+bytec 5 // "requestState"
+intc_0 // 0
+app_global_put
+bytec 6 // "requester"
+bytec_0 // ""
+app_global_put
+bytec 6 // "requester"
+frame_dig -1
+txnas Accounts
+app_global_put
+frame_dig -1
+txnas Accounts
+frame_bury 0
+frame_dig 0
+len
+itob
+extract 6 0
+frame_dig 0
+concat
+frame_bury 0
+retsub
+
+// registerAsset
+registerAsset_1:
+proto 3 1
+bytec_0 // ""
+txn Sender
+bytec 6 // "requester"
+app_global_get
+==
+// unauthorized
+assert
+bytec 5 // "requestState"
+intc_1 // 1
+app_global_put
+bytec_3 // "assetName"
+frame_dig -3
+extract 2 0
+app_global_put
+bytec_2 // "assetDesc"
+frame_dig -2
+extract 2 0
+app_global_put
+bytec 4 // "assetVal"
+frame_dig -1
+app_global_put
+pushbytes 0x001c4173736574207265676973747261646f20636f6e20c3a97869746f2e // 0x001c4173736574207265676973747261646f20636f6e20c3a97869746f2e
+frame_bury 0
+retsub
+
+// approveAsset
+approveAsset_2:
+proto 1 1
+bytec_0 // ""
+txn Sender
+global CreatorAddress
+==
+// unauthorized
+assert
+bytec 5 // "requestState"
+pushint 2 // 2
+app_global_put
+itxn_begin
+pushint 3 // acfg
+itxn_field TypeEnum
+pushbytes 0x494e53 // "INS"
+itxn_field ConfigAssetUnitName
+pushbytes 0x494e535552414e4345 // "INSURANCE"
+itxn_field ConfigAssetName
+intc_0 // 0
+itxn_field ConfigAssetDecimals
+intc_1 // 1
+itxn_field ConfigAssetTotal
+pushbytes 0x496e737572616e636520746f6b656e20666f722061737365743a20 // "Insurance token for asset: "
+bytec_3 // "assetName"
+app_global_get
+concat
+pushbytes 0x202d204465736372697074696f6e3a20 // " - Description: "
+concat
+bytec_2 // "assetDesc"
+app_global_get
+concat
+pushbytes 0x202d2056616c75653a2024 // " - Value: $"
+concat
+bytec 4 // "assetVal"
+app_global_get
+itob
+concat
+itxn_field Note
+itxn_submit
+bytec 7 // "asaID"
+itxn CreatedAssetID
+app_global_put
+pushbytes 0x41737365742049443a20 // "Asset ID: "
+itxn CreatedAssetID
+itob
+concat
+frame_bury 0
+frame_dig 0
+len
+itob
+extract 6 0
+frame_dig 0
+concat
+frame_bury 0
+retsub
+
+// sendInsurance
+sendInsurance_3:
+proto 1 1
+bytec_0 // ""
+txn Sender
+bytec 6 // "requester"
+app_global_get
+==
+// unauthorized
+assert
+itxn_begin
+pushint 4 // axfer
+itxn_field TypeEnum
+frame_dig -1
+txnas Assets
+itxn_field XferAsset
+txn Sender
+itxn_field AssetReceiver
+intc_1 // 1
+itxn_field AssetAmount
+itxn_submit
+bytec_3 // "assetName"
+bytec_0 // ""
+app_global_put
+bytec_2 // "assetDesc"
+bytec_0 // ""
+app_global_put
+bytec 4 // "assetVal"
+intc_0 // 0
+app_global_put
+bytec 5 // "requestState"
+intc_0 // 0
+app_global_put
+pushbytes 0x0017546f6b656e2064652073656775726f20656e766961646f // 0x0017546f6b656e2064652073656775726f20656e766961646f
+frame_bury 0
+retsub
+
+// hello
+hello_4:
+proto 1 1
+bytec_0 // ""
+pushbytes 0x48656c6c6f2c20 // "Hello, "
+frame_dig -1
+extract 2 0
+concat
+frame_bury 0
+frame_dig 0
+len
+itob
+extract 6 0
+frame_dig 0
+concat
+frame_bury 0
+retsub
+
+// createApp_caster
+createAppcaster_5:
+proto 0 0
+bytec_0 // ""
+intc_0 // 0
+txna ApplicationArgs 1
+intc_0 // 0
+getbyte
+frame_bury 1
+frame_dig 1
+callsub createApp_0
+frame_bury 0
+bytec_1 // 0x151f7c75
+frame_dig 0
+concat
+log
+retsub
+
+// registerAsset_caster
+registerAssetcaster_6:
+proto 0 0
+bytec_0 // ""
+dupn 2
+intc_0 // 0
+txna ApplicationArgs 1
+frame_bury 1
+txna ApplicationArgs 2
+frame_bury 2
+txna ApplicationArgs 3
+btoi
+frame_bury 3
+frame_dig 1
+frame_dig 2
+frame_dig 3
+callsub registerAsset_1
+frame_bury 0
+bytec_1 // 0x151f7c75
+frame_dig 0
+concat
+log
+retsub
+
+// approveAsset_caster
+approveAssetcaster_7:
+proto 0 0
+bytec_0 // ""
+intc_0 // 0
+txn GroupIndex
+intc_1 // 1
+-
+frame_bury 1
+frame_dig 1
+gtxns TypeEnum
+intc_1 // pay
+==
+assert
+frame_dig 1
+callsub approveAsset_2
+frame_bury 0
+bytec_1 // 0x151f7c75
+frame_dig 0
+concat
+log
+retsub
+
+// sendInsurance_caster
+sendInsurancecaster_8:
+proto 0 0
+bytec_0 // ""
+intc_0 // 0
+txna ApplicationArgs 1
+intc_0 // 0
+getbyte
+frame_bury 1
+frame_dig 1
+callsub sendInsurance_3
+frame_bury 0
+bytec_1 // 0x151f7c75
+frame_dig 0
+concat
+log
+retsub
+
+// hello_caster
+hellocaster_9:
+proto 0 0
+bytec_0 // ""
+dup
+txna ApplicationArgs 1
+frame_bury 1
+frame_dig 1
+callsub hello_4
+frame_bury 0
+bytec_1 // 0x151f7c75
+frame_dig 0
+concat
+log
+retsub

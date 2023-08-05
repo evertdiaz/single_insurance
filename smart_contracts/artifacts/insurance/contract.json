@@ -1,0 +1,74 @@
+{
+    "name": "insurance",
+    "methods": [
+        {
+            "name": "createApp",
+            "args": [
+                {
+                    "type": "account",
+                    "name": "client"
+                }
+            ],
+            "returns": {
+                "type": "string"
+            }
+        },
+        {
+            "name": "registerAsset",
+            "args": [
+                {
+                    "type": "string",
+                    "name": "name"
+                },
+                {
+                    "type": "string",
+                    "name": "desc"
+                },
+                {
+                    "type": "uint64",
+                    "name": "val"
+                }
+            ],
+            "returns": {
+                "type": "string"
+            }
+        },
+        {
+            "name": "approveAsset",
+            "args": [
+                {
+                    "type": "pay",
+                    "name": "tx"
+                }
+            ],
+            "returns": {
+                "type": "string"
+            }
+        },
+        {
+            "name": "sendInsurance",
+            "args": [
+                {
+                    "type": "asset",
+                    "name": "asa"
+                }
+            ],
+            "returns": {
+                "type": "string"
+            }
+        },
+        {
+            "name": "hello",
+            "args": [
+                {
+                    "type": "string",
+                    "name": "name"
+                }
+            ],
+            "returns": {
+                "type": "string"
+            }
+        }
+    ],
+    "networks": {}
+}
