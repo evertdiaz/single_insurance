@@ -46,7 +46,7 @@
             }
         },
         {
-            "name": "sendInsurance",
+            "name": "claimInsurance",
             "args": [
                 {
                     "type": "asset",

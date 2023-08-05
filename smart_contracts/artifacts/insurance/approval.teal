@@ -14,7 +14,7 @@ pushbytes 0x2d31124d // "approveAsset(pay)string"
 ==
 bnz main_l8
 txna ApplicationArgs 0
-pushbytes 0x6f41572b // "sendInsurance(asset)string"
+pushbytes 0x4d8be907 // "claimInsurance(asset)string"
 ==
 bnz main_l7
 txna ApplicationArgs 0
@@ -43,7 +43,7 @@ intc_0 // 0
 !=
 &&
 assert
-callsub sendInsurancecaster_8
+callsub claimInsurancecaster_8
 intc_1 // 1
 return
 main_l8:
@@ -206,8 +206,8 @@ concat
 frame_bury 0
 retsub
 
-// sendInsurance
-sendInsurance_3:
+// claimInsurance
+claimInsurance_3:
 proto 1 1
 bytec_0 // ""
 txn Sender
@@ -326,8 +326,8 @@ concat
 log
 retsub
 
-// sendInsurance_caster
-sendInsurancecaster_8:
+// claimInsurance_caster
+claimInsurancecaster_8:
 proto 0 0
 bytec_0 // ""
 intc_0 // 0
@@ -336,7 +336,7 @@ intc_0 // 0
 getbyte
 frame_bury 1
 frame_dig 1
-callsub sendInsurance_3
+callsub claimInsurance_3
 frame_bury 0
 bytec_1 // 0x151f7c75
 frame_dig 0
